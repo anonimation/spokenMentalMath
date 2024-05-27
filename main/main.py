@@ -16,13 +16,14 @@ def sayQuestion(num1, num2, curOps):
         q = str(num1) + " divded by " + str(num2)
     tts.saySomething(q)
 
-
+# Specify the range of numbers that can be asked
 def selectRange(op):
     lower = input("Select a lower-bound for the range for " + op)
     higher = input("Select a higher-bound for the range for " + op)
     return (lower, higher)
 
-def basicQuestions(rules, op):
+# Specify the rules 
+def basicRules(rules, op):
 
     if(input("Allow multiples of 10? (Y/N)") == "N"):
         rules.append((1, "candidate % 10 != 0"))
@@ -57,7 +58,7 @@ def createRules(op):
     
     # For addition, subtraction, multiplication, rules are straightforward
     if op in ["+","-","*"]:
-        basicQuestions(rules, op)
+        basicRules(rules, op)
     # For division
     else:
         if(input("Allow multiples of 10? (Y/N)") == "N"):
@@ -82,9 +83,10 @@ def createRules(op):
     
     return rules
 
+def setRange(rulesForThisOp):
+    pass
 
-
-
+# "Main method"
 def clientInteraction():
 
 
@@ -126,10 +128,21 @@ def clientInteraction():
             rules[op].append(selectRange(op))
 
             # Ask the user for any rules (e.g. no even numbers, no multiples of 10, etc.)
-            rules = createRules(op)
+            opRules = createRules(op)
             # Populate the rules for that operation
-            for rule in rules:
+            for rule in opRules:
                 rules[op].append(rule)
+
+        # Populate ranges and eliminate numbers that breach the rules
+        numbers = {
+            "+": [],
+            "-": [],
+            "*": [],
+            "/": []
+        }
+        for op in ops:
+            # A list of valid numbers for this particular operation
+            numbers[op] = setRange(rules[op])
 
 
 
