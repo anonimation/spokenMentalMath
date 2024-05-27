@@ -22,6 +22,32 @@ def selectRange(op):
     higher = input("Select a higher-bound for the range for " + op)
     return (lower, higher)
 
+def basicQuestions(rules, op):
+
+    if(input("Allow multiples of 10? (Y/N)") == "N"):
+        rules.append((1, "candidate % 10 != 0"))
+    if(input("Allow multiples of 5? (Y/N)") == "N"):
+        rules.append((1, "candidate % 5 != 0"))
+    if(input("Allow even numbers? (Y/N)") == "N"):
+        rules.append((1, "candidate % 2 != 0"))
+    if(input("Allow odd numbers? (Y/N)") == "N"):
+        rules.append((1, "candidate % 2 != 1"))
+    if(input("Allow single digit numbers? (Y/N)") == "N"):
+        rules.append((1, "candidate < 10 && candidate > -10"))
+    if(input("Allow the number zero? (Y/N)") == "N"):
+        rules.append((1, "candidate != 0"))
+    if(input("Allow positive " + op + " positive numbers? (Y/N)") == "N"):
+        rules.append((2, "candidate1 > 0 and candidate2 > 0"))
+    if(input("Allow positive " + op + " negative numbers? (Y/N)") == "N"):
+        rules.append((2, "(candidate1 > 0 and candidate2 < 0) or (candidate1 < 0 and candidate2 > 0)"))
+    if(input("Allow negative " + op + " negative numbers? (Y/N)") == "N"):
+        rules.append((2, "candidate1 < 0 and candidate2 < 0"))
+
+    while(True):
+        if(input("Would you like to add another custom rule? (Y/N)") == "Y"):
+            rules.append(input("Enter your custom rule:"))
+        else:
+            break
 
 # Check whether the user wants to ignore certain question types for this operation
 # e.g. multiples of 10, multiples of 5, divisible by 1, etc.
@@ -29,7 +55,11 @@ def createRules(op):
     
     rules = []
     
-    if op == "+":
+    # For addition, subtraction, multiplication, rules are straightforward
+    if op in ["+","-","*"]:
+        basicQuestions(rules, op)
+    # For division
+    else:
         if(input("Allow multiples of 10? (Y/N)") == "N"):
             rules.append((1, "candidate % 10 != 0"))
         if(input("Allow multiples of 5? (Y/N)") == "N"):
@@ -40,32 +70,23 @@ def createRules(op):
             rules.append((1, "candidate % 2 != 1"))
         if(input("Allow single digit numbers? (Y/N)") == "N"):
             rules.append((1, "candidate < 10 && candidate > -10"))
-        if(input("Allow the number zero? (Y/N)") == "N"):
-            rules.append((1, "candidate != 0"))
-        if(input("Allow positive plus positive numbers? (Y/N)") == "N"):
-            rules.append((2, "candidate1(candidate1 * candidate2 < 0)"))
-        #if(input("Allow positive "))
-
+        
+        if(input("Allow decimals? (Y/N)") == "N"):
+            rules.append((2, "candidate1 % candidate2 == 0"))
+        
         while(True):
             if(input("Would you like to add another custom rule? (Y/N)") == "Y"):
-                rules.append("Enter your custom rule:")
+                rules.append(input("Enter your custom rule:"))
             else:
                 break
-
-        return rules
-
-    elif op == "-":
-        pass
-    elif op == "*":
-        pass
-    else:
-        pass 
-
+    
+    return rules
 
 
 
 
 def clientInteraction():
+
 
     # Key is the operation
     # Value is a list
