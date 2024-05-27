@@ -84,7 +84,26 @@ def createRules(op):
     return rules
 
 def setRange(rulesForThisOp):
-    pass
+    lowerBound = rulesForThisOp[0][0]
+    upperBound = rulesForThisOp[0][1]
+
+    # Populate entire range
+    numbers = []
+    for i in range(lowerBound, upperBound):
+        numbers[i - lowerBound] = i
+    
+    # Eliminate invalid numbers
+    for rule in rulesForThisOp:
+        if rule[0] == 1:
+            for i in range(len(numbers)):
+                candidate = numbers[i]
+                if not(eval(rule[1])):
+                    numbers[i] == "Remove"
+    
+    # Remove all numbers failing to meet the rules
+    trueNumbers = [num for num in numbers if num != "Remove"]
+    return trueNumbers
+
 
 # "Main method"
 def clientInteraction():
