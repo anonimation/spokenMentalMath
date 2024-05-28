@@ -13,40 +13,40 @@ def sayQuestion(num1, num2, curOps):
     elif curOps == "*":
         q = str(num1) + " times " + str(num2)
     else:
-        q = str(num1) + " divded by " + str(num2)
+        q = str(num1) + " divided by " + str(num2)
     tts.saySomething(q)
 
 # Specify the range of numbers that can be asked
 def selectRange(op):
-    lower = input("Select a lower-bound for the range for " + op)
-    higher = input("Select a higher-bound for the range for " + op)
+    lower = input("Select a lower-bound for the range for " + op + " ")
+    higher = input("Select a higher-bound for the range for " + op + " ")
     return (lower, higher)
 
 # Specify the rules 
 def basicRules(rules, op):
 
-    if(input("Allow multiples of 10? (Y/N)") == "N"):
+    if(input("Allow multiples of 10? (Y/N) ") == "N"):
         rules.append((1, "candidate % 10 != 0"))
-    if(input("Allow multiples of 5? (Y/N)") == "N"):
+    if(input("Allow multiples of 5? (Y/N) ") == "N"):
         rules.append((1, "candidate % 5 != 0"))
-    if(input("Allow even numbers? (Y/N)") == "N"):
+    if(input("Allow even numbers? (Y/N) ") == "N"):
         rules.append((1, "candidate % 2 != 0"))
-    if(input("Allow odd numbers? (Y/N)") == "N"):
+    if(input("Allow odd numbers? (Y/N) ") == "N"):
         rules.append((1, "candidate % 2 != 1"))
-    if(input("Allow single digit numbers? (Y/N)") == "N"):
+    if(input("Allow single digit numbers? (Y/N) ") == "N"):
         rules.append((1, "candidate < 10 && candidate > -10"))
-    if(input("Allow the number zero? (Y/N)") == "N"):
+    if(input("Allow the number zero? (Y/N) ") == "N"):
         rules.append((1, "candidate != 0"))
-    if(input("Allow positive " + op + " positive numbers? (Y/N)") == "N"):
+    if(input("Allow positive " + op + " positive numbers? (Y/N) ") == "N"):
         rules.append((2, "candidate1 > 0 and candidate2 > 0"))
-    if(input("Allow positive " + op + " negative numbers? (Y/N)") == "N"):
+    if(input("Allow positive " + op + " negative numbers? (Y/N) ") == "N"):
         rules.append((2, "(candidate1 > 0 and candidate2 < 0) or (candidate1 < 0 and candidate2 > 0)"))
-    if(input("Allow negative " + op + " negative numbers? (Y/N)") == "N"):
+    if(input("Allow negative " + op + " negative numbers? (Y/N) ") == "N"):
         rules.append((2, "candidate1 < 0 and candidate2 < 0"))
 
     while(True):
-        if(input("Would you like to add another custom rule? (Y/N)") == "Y"):
-            rules.append(input("Enter your custom rule:"))
+        if(input("Would you like to add another custom rule? (Y/N) ") == "Y"):
+            rules.append(input("Enter your custom rule: "))
         else:
             break
 
@@ -61,23 +61,23 @@ def createRules(op):
         basicRules(rules, op)
     # For division
     else:
-        if(input("Allow multiples of 10? (Y/N)") == "N"):
+        if(input("Allow multiples of 10? (Y/N) ") == "N"):
             rules.append((1, "candidate % 10 != 0"))
-        if(input("Allow multiples of 5? (Y/N)") == "N"):
+        if(input("Allow multiples of 5? (Y/N) ") == "N"):
             rules.append((1, "candidate % 5 != 0"))
-        if(input("Allow even numbers? (Y/N)") == "N"):
+        if(input("Allow even numbers? (Y/N) ") == "N"):
             rules.append((1, "candidate % 2 != 0"))
-        if(input("Allow odd numbers? (Y/N)") == "N"):
+        if(input("Allow odd numbers? (Y/N) ") == "N"):
             rules.append((1, "candidate % 2 != 1"))
-        if(input("Allow single digit numbers? (Y/N)") == "N"):
+        if(input("Allow single digit numbers? (Y/N) ") == "N"):
             rules.append((1, "candidate < 10 && candidate > -10"))
         
-        if(input("Allow decimals? (Y/N)") == "N"):
+        if(input("Allow decimals? (Y/N) ") == "N"):
             rules.append((2, "candidate1 % candidate2 == 0"))
         
         while(True):
-            if(input("Would you like to add another custom rule? (Y/N)") == "Y"):
-                rules.append(input("Enter your custom rule:"))
+            if(input("Would you like to add another custom rule? (Y/N) ") == "Y"):
+                rules.append(input("Enter your custom rule: "))
             else:
                 break
     
@@ -124,15 +124,23 @@ def clientInteraction():
     }
 
     # Begin client interaction
-    preset = input("Hello. Do you want to load a preset? (Y/N)")
+    preset = input("Hello. Do you want to load a preset? (Y/N) ")
 
     # If preset with setting exists
     if(preset == "Y"):
-        pass
+        try:
+            fileName = input("What is the name of the file? Omit .txt ")
+            file = open(fileName + ".txt", "r")
+        except OSError:
+            print("Error accessing file. Verify name of the file")
+            return
+        
+        data = file.readline()
+        # TODO
 
     # Else, continue with manual setup
     else:
-        ops = input("Please specify which operations to include: +-*/")
+        ops = input("Please specify which operations to include: +-*/ ")
         ops = ops.split("")
 
         # Exit if invalid
@@ -162,6 +170,13 @@ def clientInteraction():
         for op in ops:
             # A list of valid numbers for this particular operation
             numbers[op] = setRange(rules[op])
+        
+        # Ask whether to save these inputs
+        if(input("Save as a preset? (Y/N) ")):
+            
+            while(True):
+                fileName = input("Name your preset: ")
+        
 
 
 
