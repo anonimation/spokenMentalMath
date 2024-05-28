@@ -123,6 +123,14 @@ def clientInteraction():
         "/": []
     }
 
+    # The set of valid ranges of numbers that can be asked for each operation
+    numbers = {
+        "+": [],
+        "-": [],
+        "*": [],
+        "/": []
+    }
+
     # Begin client interaction
     preset = input("Hello. Do you want to load a preset? (Y/N) ")
 
@@ -135,7 +143,22 @@ def clientInteraction():
             print("Error accessing file. Verify name of the file")
             return
         
-        data = file.readline()
+        
+        curOp = file.readline()
+        while(curOp):
+            if curOp in ["+", "-", "*", "/"]:
+                
+                data = file.readline().split(",")
+                for rule in data:
+                    rules[curOp].append(rule)
+                rules.pop(-1)
+                numbers[curOp] = file.readline()
+            else:
+                print("Error!")
+                return
+        
+                
+        
         # TODO
         # Remember to delete last item result from split(), since will be empty
 
@@ -162,12 +185,6 @@ def clientInteraction():
                 rules[op].append(rule)
 
         # Populate ranges and eliminate numbers that breach the rules
-        numbers = {
-            "+": [],
-            "-": [],
-            "*": [],
-            "/": []
-        }
         for op in ops:
             # A list of valid numbers for this particular operation
             numbers[op] = setRange(rules[op])
@@ -189,6 +206,10 @@ def clientInteraction():
                 # Get the rules for a particular operation
                 opRules = rules[op]
 
+                # Signal the operation whose data is being read
+                file.write(op)
+                file.write("\n")
+
                 # Save every rule, seperate by comma
                 for rule in opRules:
                     file.write(rule + ",")
@@ -199,13 +220,14 @@ def clientInteraction():
                 file.write("\n")
             file.close()
         
-        if(input("Preset Saved. Start game? (Y/N)") == "Y"):
-            # Start game
-            pass
-        else:
-            print("See you later!")
-            return
+        print("Preset Saved.")
 
+    if(input("Rules ready. Start game? (Y/N)") == "Y"):
+        # Start game
+        pass
+    else:
+        print("See you later!")
+        return
 
 
 
