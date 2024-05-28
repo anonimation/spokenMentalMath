@@ -137,6 +137,7 @@ def clientInteraction():
         
         data = file.readline()
         # TODO
+        # Remember to delete last item result from split(), since will be empty
 
     # Else, continue with manual setup
     else:
@@ -174,11 +175,36 @@ def clientInteraction():
         # Ask whether to save these inputs
         if(input("Save as a preset? (Y/N) ")):
             
+            file
             while(True):
                 fileName = input("Name your preset: ")
+                try: 
+                    file = open(fileName + ".txt", "x")
+                    break
+                except FileNotFoundError:
+                    print("File name taken. Choose another.")
+                    continue
+            
+            for op in ops:
+                # Get the rules for a particular operation
+                opRules = rules[op]
+
+                # Save every rule, seperate by comma
+                for rule in opRules:
+                    file.write(rule + ",")
+                file.write("\n")
+
+                # Save the valid number ranges
+                file.write(numbers[op])
+                file.write("\n")
+            file.close()
         
-
-
+        if(input("Preset Saved. Start game? (Y/N)") == "Y"):
+            # Start game
+            pass
+        else:
+            print("See you later!")
+            return
 
 
 
