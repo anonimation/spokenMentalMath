@@ -4,6 +4,7 @@ import random as r
 
 
 # Given the two numbers and the operation, say the question
+# TODO Move to game file
 def sayQuestion(num1, num2, curOps):
     q = ""
     if curOps == "+":
@@ -17,12 +18,16 @@ def sayQuestion(num1, num2, curOps):
     tts.saySomething(q)
 
 # Specify the range of numbers that can be asked
+# Request the operation for which we are selecting a range as a string
+# Return a tuple with the lower and upper bound
 def selectRange(op):
     lower = input("Select a lower-bound for the range for " + op + " ")
     higher = input("Select a higher-bound for the range for " + op + " ")
     return (lower, higher)
 
-# Specify the rules 
+# Specify the rules for each operation
+# Request a list to store the rules and the operation that we are choosing rules for
+# No return, modifies passed list
 def basicRules(rules, op):
 
     if(input("Allow multiples of 10? (Y/N) ") == "N"):
@@ -52,6 +57,8 @@ def basicRules(rules, op):
 
 # Check whether the user wants to ignore certain question types for this operation
 # e.g. multiples of 10, multiples of 5, divisible by 1, etc.
+# Request operation we want to add rules for
+# Return a list with those rules
 def createRules(op):
     
     rules = []
@@ -83,6 +90,9 @@ def createRules(op):
     
     return rules
 
+# Evaluates rules and removes any numbers from the range that fail to meet rules
+# Requests the set of rules for this particular operation
+# Returns a list of numbers that are valid for this operation
 def setRange(rulesForThisOp):
     lowerBound = rulesForThisOp[0][0]
     upperBound = rulesForThisOp[0][1]
@@ -136,6 +146,8 @@ def clientInteraction():
 
     # If preset with setting exists
     if(preset == "Y"):
+
+        # Try to open preset
         try:
             fileName = input("What is the name of the file? Omit .txt ")
             file = open(fileName + ".txt", "r")
@@ -143,24 +155,25 @@ def clientInteraction():
             print("Error accessing file. Verify name of the file")
             return
         
-        
+        # Read each line
         curOp = file.readline()
         while(curOp):
+            # Depending on each operation
             if curOp in ["+", "-", "*", "/"]:
                 
+                # Read each rule for the current operation
                 data = file.readline().split(",")
                 for rule in data:
                     rules[curOp].append(rule)
                 rules.pop(-1)
+                
+                # Read the valid number range for the operation
                 numbers[curOp] = file.readline()
             else:
                 print("Error!")
                 return
         
-                
-        
-        # TODO
-        # Remember to delete last item result from split(), since will be empty
+        file.close()
 
     # Else, continue with manual setup
     else:
@@ -192,6 +205,7 @@ def clientInteraction():
         # Ask whether to save these inputs
         if(input("Save as a preset? (Y/N) ")):
             
+            # Try to create a preset
             file
             while(True):
                 fileName = input("Name your preset: ")
@@ -202,6 +216,7 @@ def clientInteraction():
                     print("File name taken. Choose another.")
                     continue
             
+            # For each operation
             for op in ops:
                 # Get the rules for a particular operation
                 opRules = rules[op]
