@@ -21,8 +21,8 @@ def sayQuestion(num1, num2, curOps):
 # Request the operation for which we are selecting a range as a string
 # Return a tuple with the lower and upper bound
 def selectRange(op):
-    lower = input("Select a lower-bound for the range for " + op + " ")
-    higher = input("Select a higher-bound for the range for " + op + " ")
+    lower = input("Select a lower-bound for the range for " + op + ": ")
+    higher = input("Select a higher-bound for the range for " + op + ": ")
     return (lower, higher)
 
 # Specify the rules for each operation
@@ -94,13 +94,13 @@ def createRules(op):
 # Requests the set of rules for this particular operation
 # Returns a list of numbers that are valid for this operation
 def setRange(rulesForThisOp):
-    lowerBound = rulesForThisOp[0][0]
-    upperBound = rulesForThisOp[0][1]
+    lowerBound = int(rulesForThisOp[0][0])
+    upperBound = int(rulesForThisOp[0][1])
 
     # Populate entire range
     numbers = []
     for i in range(lowerBound, upperBound):
-        numbers[i - lowerBound] = i
+        numbers.append(i + 1)
     
     # Eliminate invalid numbers
     for rule in rulesForThisOp:
@@ -108,7 +108,7 @@ def setRange(rulesForThisOp):
             for i in range(len(numbers)):
                 candidate = numbers[i]
                 if not(eval(rule[1])):
-                    numbers[i] == "Remove"
+                    numbers[i] = "Remove"
     
     # Remove all numbers failing to meet the rules
     trueNumbers = [num for num in numbers if num != "Remove"]
@@ -177,8 +177,8 @@ def clientInteraction():
 
     # Else, continue with manual setup
     else:
-        ops = input("Please specify which operations to include: +-*/ ")
-        ops = ops.split("")
+        ops = input("Please specify which operations to include with commas between them: (e.g. +-,*,/) ")
+        ops = ops.split(",")
 
         # Exit if invalid
         if len(ops) == 0:
@@ -206,13 +206,13 @@ def clientInteraction():
         if(input("Save as a preset? (Y/N) ")):
             
             # Try to create a preset
-            file
+            file = None
             while(True):
                 fileName = input("Name your preset: ")
                 try: 
                     file = open(fileName + ".txt", "x")
                     break
-                except FileNotFoundError:
+                except FileExistsError:
                     print("File name taken. Choose another.")
                     continue
             
@@ -227,11 +227,11 @@ def clientInteraction():
 
                 # Save every rule, seperate by comma
                 for rule in opRules:
-                    file.write(rule + ",")
+                    file.write(str(rule) + ",")
                 file.write("\n")
 
                 # Save the valid number ranges
-                file.write(numbers[op])
+                file.write(str(numbers[op]))
                 file.write("\n")
             file.close()
         
