@@ -149,14 +149,14 @@ def clientInteraction():
 
         # Try to open preset
         try:
-            fileName = input("What is the name of the file? Omit .txt ")
-            file = open(fileName + ".txt", "r")
+            fileName = input("What is the name of the file? Omit .txt: ")
+            file = open("./savefiles/" + fileName + ".txt", "r")
         except OSError:
             print("Error accessing file. Verify name of the file")
             return
         
         # Read each line
-        curOp = file.readline()
+        curOp = file.readline()[:-2] # get rid of "\n"
         while(curOp):
             # Depending on each operation
             if curOp in ["+", "-", "*", "/"]:
@@ -210,7 +210,7 @@ def clientInteraction():
             while(True):
                 fileName = input("Name your preset: ")
                 try: 
-                    file = open(fileName + ".txt", "x")
+                    file = open("./savefiles/" + fileName + ".txt", "x")
                     break
                 except FileExistsError:
                     print("File name taken. Choose another.")
